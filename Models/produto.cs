@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SQLite;
+﻿using SQLite;
 
 namespace MauiAppCompras.Models
 {
@@ -12,5 +9,7 @@ namespace MauiAppCompras.Models
         public string Descricao { get; set; }
         public double Quantidade { get; set; }
         public double Preco { get; set; }
+        public double Total { get => Quantidade * Preco; }
+
     }
 }
