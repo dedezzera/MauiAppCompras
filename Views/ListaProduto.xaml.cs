@@ -22,6 +22,8 @@ public partial class ListaProduto : ContentPage
         try
         {
 
+            lista.Clear();
+
             List<Produto> tmp = await App.Db.GetAll();
 
             tmp.ForEach(i => lista.Add(i));
@@ -107,14 +109,14 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
         try
         {
             
             Produto p = e.SelectedItem as Produto;
 
-            Navigation.PushAsync(new Views.EditarProduto
+            await Navigation.PushAsync(new Views.EditarProduto
             {
                 BindingContext = p,
             });
