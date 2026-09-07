@@ -1,61 +1,127 @@
 using MauiAppCompras.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MauiAppCompras.Views;
 
 
 public partial class ListaProduto : ContentPage
 {
-	ObservableCollection<Produto> lista = new ObservableCollection<Produto>();
+    ObservableCollection<Produto> lista = new ObservableCollection<Produto>();
     public ListaProduto()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
-		lst_produtos.ItemsSource = lista;
+        lst_produtos.ItemsSource = lista;
     }
 
-    protected async override void OnAppearing()
-		{ 
-			List<Produto> tmp = await App.Db.GetAll();
-			tmp.ForEach(i => lista.Add(i));
-		}
-
-    private void ToolbarItem_Clicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-		try
-		{
-			Navigation.PushAsync(new Views.NovoProduto());
-		}
-		catch (Exception ex)
-		{
+        try
+        {
 
-			DisplayAlert("Ops", ex.Message, "Ok");
-		}
+            List<Produto> tmp = await App.Db.GetAll();
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "Ok");
+        }
+    }
+
+    private async void ToolbarItem_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            await Navigation.PushAsync(new Views.NovoProduto());
+        }
+        catch (Exception ex)
+        {
+
+            await DisplayAlert("Ops", ex.Message, "Ok");
+        }
     }
 
     private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
     {
-		string q = e.NewTextValue;
+        try
+        {
 
-		lista.Clear();
+            string q = e.NewTextValue;
 
-        List<Produto> tmp = await App.Db.Search(q);
+            lista.Clear();
 
-        tmp.ForEach(i => lista.Add(i));
+            List<Produto> tmp = await App.Db.Search(q);
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "Ok");
+        }
     }
 
-    private void ToolbarItem_Clicked_1(object sender, EventArgs e)
+    private async void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
-		double soma = lista.Sum(i => i.Total);
+        try
+        {
 
-        string msg = $"Total de produtos: {lista.Count}\nSoma dos produtos: {soma:C}";
 
-        DisplayAlertAsync("Total", msg, "Ok");
-		
+            double soma = lista.Sum(i => i.Total);
+
+            string msg = $"Total de produtos: {lista.Count}\nSoma dos produtos: {soma:C}";
+
+            await DisplayAlert("Total", msg, "Ok");
+        }
+        catch (Exception ex)
+        {
+            DisplayAlert("Ops", ex.Message, "Ok");
+        }
     }
 
-    private void MenuItem_Clicked(object sender, EventArgs e)
+    private async void MenuItem_Clicked(object sender, EventArgs e)
     {
-		
+        try
+        {
+
+            MenuItem selecionado = sender as MenuItem;
+
+            Produto p = selecionado.BindingContext as Produto;
+
+            bool confirm = await DisplayAlert(
+                "Tem certeza?", $"Deseja excluir o produto {p.Descricao}?", "Sim", "Não");
+
+
+            if (confirm)
+            {
+                await App.Db.Delete(p.Id);
+                lista.Remove(p);
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "Ok");
+        }
+    }
+
+    private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        try
+        {
+            
+            Produto p = e.SelectedItem as Produto;
+
+            Navigation.PushAsync(new Views.EditarProduto
+            {
+                BindingContext = p,
+            });
+        }
+        catch (Exception ex)
+        {
+            DisplayAlert("Ops", ex.Message, "Ok");
+        }
     }
 }

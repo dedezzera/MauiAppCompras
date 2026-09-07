@@ -23,9 +23,9 @@
         <SearchBar Placeholder="Pesquisar produto..." 
                    x:Name="txt_search"
                    TextChanged="txt_search_TextChanged"/>
-        <ListView x:Name="lst_produtos">
+        <ListView x:Name="lst_produtos" ItemSelected="lst_produtos_ItemSelected">
             <ListView.Header>
-                <Grid ColumnDefinitions="*, *, *, *, *,*">
+                <Grid ColumnDefinitions="*, *, *, *, *">
                     <Label Text="ID" Grid.Column="0" FontAttributes="Bold"/>
                     <Label Text="Descrição" Grid.Column="1" FontAttributes="Bold"/>
                     <Label Text="Preço" Grid.Column="2" FontAttributes="Bold"/>
@@ -41,7 +41,7 @@
                         <ViewCell.ContextActions>
                             <MenuItem Text="Remover" Clicked="MenuItem_Clicked"/> 
                         </ViewCell.ContextActions>
-                        <Grid ColumnDefinitions="*, *, *, *, *,*">
+                        <Grid ColumnDefinitions="*, *, *, *, *">
                             <Label Text="{Binding Id}" Grid.Column="0" FontAttributes="Bold"/>
                             <Label Text="{Binding Descricao}" Grid.Column="1" FontAttributes="Bold"/>
                             <Label Text="{Binding Preco}" Grid.Column="2" FontAttributes="Bold"/>

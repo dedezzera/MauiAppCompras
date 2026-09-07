@@ -1,9 +1,40 @@
+using MauiAppCompras.Models;
+
 namespace MauiAppCompras.Views;
 
-public partial class NewPage1 : ContentPage
+public partial class EditarProduto: ContentPage
 {
-	public NewPage1()
+	public EditarProduto()
 	{
-		InitializeComponent();
+			InitializeComponent();
 	}
+
+
+	private async void ToolbarItem_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+
+            Produto produto_anexado = BindingContext as Produto;
+
+            Produto p = new Produto
+            {
+                Id = produto_anexado.Id,
+                Descricao = txt_descricao.Text,
+                Quantidade = Convert.ToDouble(txt_quantidade.Text),
+                Preco = Convert.ToDouble(txt_preco.Text)
+            };
+
+            await App.Db.Update(p);
+            await DisplayAlertAsync("Sucesso!", "Registro Alterado.", "OK");
+            await Navigation.PopAsync();
+
+        }
+        catch (Exception ex)
+        {
+
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+
+        }
+    }
 }
