@@ -8,6 +8,7 @@ namespace MauiAppCompras.Models
         string _descricao;
         double _quantidade;
         double _preco;
+        string _categoria;
 
 
         [PrimaryKey, AutoIncrement]
@@ -47,5 +48,16 @@ namespace MauiAppCompras.Models
         }
         public double Total { get => Quantidade * Preco; }
 
+        public string Categoria {
+            get => _categoria;
+            set
+            {
+                if (value == null)
+                {
+                    throw new Exception("Categoria não pode ser vazia");
+                }
+                _categoria = value;
+            }
+        }
     }
 }

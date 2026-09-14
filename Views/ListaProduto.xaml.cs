@@ -54,6 +54,8 @@ public partial class ListaProduto : ContentPage
 
             string q = e.NewTextValue;
 
+            lst_produtos.IsRefreshing = true;
+
             lista.Clear();
 
             List<Produto> tmp = await App.Db.Search(q);
@@ -63,8 +65,64 @@ public partial class ListaProduto : ContentPage
         catch (Exception ex)
         {
             await DisplayAlert("Ops", ex.Message, "Ok");
+        } finally
+
+        { lst_produtos.IsRefreshing = false; }
+    }
+
+    private async void AplicarFiltros()
+    {
+        string pesquisa = txt_search.Text?.ToLower() ?? "";
+        string categoria = picker_categoria.SelectedItem?.ToString();
+
+        var produtos = await App.Db.GetAll();
+
+        if (!string.IsNullOrEmpty(pesquisa))
+        {
+            produtos = produtos
+                .Where(p => p.Descricao.ToLower().Contains(pesquisa))
+                .ToList();
+        }
+
+        if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
+        {
+            produtos = produtos
+                .Where(p => p.Categoria == categoria)
+                .ToList();
+        }
+
+        lista.Clear();
+
+        foreach (var produto in produtos)
+        {
+            lista.Add(produto);
         }
     }
+
+    private async void txt_search_TextChanged_1(object sender, TextChangedEventArgs e)
+    {
+        try
+        {
+            AplicarFiltros();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "Ok");
+        }
+    }
+
+    private async void picker_categoria_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            AplicarFiltros();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "Ok");
+        }
+    }
+
 
     private async void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
@@ -125,5 +183,30 @@ public partial class ListaProduto : ContentPage
         {
             DisplayAlert("Ops", ex.Message, "Ok");
         }
+    }
+
+    private async void lst_produtos_Refreshing(object sender, EventArgs e)
+    {
+        try
+        {
+
+            lista.Clear();
+
+            List<Produto> tmp = await App.Db.GetAll();
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "Ok");
+
+        } finally 
+
+        { lst_produtos.IsRefreshing = false; }
+    }
+
+    private async void ToolbarItem_Clicked_2(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new RelatorioCategoria());
     }
 }

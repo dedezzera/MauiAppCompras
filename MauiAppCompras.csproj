@@ -84,6 +84,9 @@
 	  <Compile Update="Views\EditarProduto.xaml.cs">
 	    <DependentUpon>EditarProduto.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\RelatorioCategoria.xaml.cs">
+	    <DependentUpon>RelatorioCategoria.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -91,6 +94,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\EditarProduto.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RelatorioCategoria.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\NovoProduto.xaml">
